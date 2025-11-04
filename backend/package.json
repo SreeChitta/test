@@ -1,0 +1,20 @@
+{
+  "name": "sl-crud-backend",
+  "type": "module",
+  "scripts": {
+    "deploy:dev": "serverless deploy --stage dev",
+    "deploy:prod": "serverless deploy --stage prod",
+    "remove:dev": "serverless remove --stage dev",
+    "remove:prod": "serverless remove --stage prod",
+    "offline": "serverless offline"
+  },
+  "devDependencies": {
+    "serverless": "^3.40.0",
+    "serverless-esbuild": "^1.52.1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.675.0",
+    "@aws-sdk/lib-dynamodb": "^3.675.0",
+    "uuid": "^9.0.1"
+  }
+}

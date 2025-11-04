@@ -1,0 +1,2 @@
+# This is an example snippet; not included by default.
+# To enable, merge the resources & authorizer into serverless.yml and add `authorizer:` blocks on functions.

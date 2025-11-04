@@ -1,0 +1,36 @@
+name: CI/CD Serverless (Backend) + Vercel (Frontend handled by Vercel)
+
+on:
+  push:
+    branches: [ dev, master ]
+
+jobs:
+  backend-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci || npm i
+      - name: Configure AWS creds via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::<AWS_ACCOUNT_ID>:role/GitHubActionsServerlessDeployRole
+          aws-region: us-east-1
+      - name: Deploy Serverless (stage)
+        run: |
+          STAGE=$([[ "${GITHUB_REF_NAME}" == "master" ]] && echo prod || echo dev)
+          npx serverless deploy --stage $STAGE
+      - name: Output API URL
+        run: |
+          STAGE=$([[ "${GITHUB_REF_NAME}" == "master" ]] && echo prod || echo dev)
+          npx serverless info --stage $STAGE
